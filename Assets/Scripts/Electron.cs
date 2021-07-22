@@ -9,7 +9,7 @@ public enum ElectronMoveState
 [RequireComponent(typeof(Rigidbody))]
 public class Electron : MonoBehaviour
 {
-    [SerializeField] float velocity;
+    [SerializeField] Vector3 velocityVector = Vector3.zero;
     [SerializeField] float charge;
     [SerializeField] Vector3 magneticFieldVector;
 
@@ -29,14 +29,14 @@ public class Electron : MonoBehaviour
 
     private void FixedUpdate()
     {
-        electronBody.velocity = transform.forward * velocity;
+        electronBody.velocity = velocityVector;
 
-        Vector3 velocityVector = (transform.position - prevPosition).normalized * velocity;
+        Vector3 directionOfMovement = (transform.position - prevPosition).normalized;
 
         if (currentElectronMoveState == ElectronMoveState.MOVING)
         {
-            Vector3 force = GetForce(charge, velocityVector, magneticFieldVector);
-            electronBody.AddForce(force, ForceMode.Force);
+            Vector3 force = GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector);
+            electronBody.AddForce(force, ForceMode.VelocityChange);
         }
     }
 
@@ -45,6 +45,10 @@ public class Electron : MonoBehaviour
         Vector3 forceDirection = Vector3.Cross(velocityVector.normalized, magneticFieldVector.normalized);
 
         float forceMagnitude = charge * Mathf.Sqrt(Vector3.SqrMagnitude(velocityVector)) * Mathf.Sqrt(Vector3.SqrMagnitude(magneticFieldVector));
+
+        Debug.Log(forceMagnitude);
+
+        Debug.DrawLine(transform.position, transform.position - forceDirection, Color.red);
 
         return forceDirection * forceMagnitude;
     }

@@ -10,15 +10,19 @@ public enum ElectronMoveState
 public class Electron : MonoBehaviour
 {
     [SerializeField] Vector3 velocityVector = Vector3.zero;
+
+    [SerializeField, Range(-90, 90)] float angle;
+    [SerializeField] float velocity;
     [SerializeField] float charge;
-    [SerializeField] Vector3 magneticFieldVector;
+    [SerializeField] float magneticFieldStrength = 10;
 
     [SerializeField] ElectronMoveState currentElectronMoveState;
 
     private Rigidbody electronBody;
 
     private Vector3 prevPosition;
-    private Vector3 direction;
+    private Vector3 directionOfMovement;
+    private Vector3 magneticFieldVector = Vector3.right;
 
     private void Awake()
     {
@@ -27,28 +31,35 @@ public class Electron : MonoBehaviour
         prevPosition = transform.position;
     }
 
+    private void ToggleSim()
+    {
+        if (currentElectronMoveState == ElectronMoveState.MOVING) currentElectronMoveState = ElectronMoveState.MOVING;
+        else currentElectronMoveState = ElectronMoveState.NOT_MOVING;
+    }
+
     private void FixedUpdate()
     {
-        electronBody.velocity = velocityVector;
+        velocityVector = new Vector3(velocity * Mathf.Cos(angle * Mathf.Deg2Rad), velocity * Mathf.Sin(angle * Mathf.Deg2Rad));
 
-        Vector3 directionOfMovement = (transform.position - prevPosition).normalized;
+        directionOfMovement = (transform.position - prevPosition).normalized == Vector3.zero ? velocityVector.normalized : (transform.position - prevPosition).normalized;
+
+        directionOfMovement = new Vector3(velocityVector.x, directionOfMovement.y, directionOfMovement.z);
+
+        electronBody.velocity = velocityVector.magnitude * directionOfMovement;
 
         if (currentElectronMoveState == ElectronMoveState.MOVING)
         {
-            Vector3 force = GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector);
-            electronBody.AddForce(force, ForceMode.VelocityChange);
+            electronBody.AddForce(GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector), ForceMode.Force);
         }
+
+        prevPosition = transform.position;
     }
 
     private Vector3 GetForce(float charge, Vector3 velocityVector, Vector3 magneticFieldVector)
     {
-        Vector3 forceDirection = Vector3.Cross(velocityVector.normalized, magneticFieldVector.normalized);
+        Vector3 forceDirection = Vector3.Cross(velocityVector, magneticFieldVector).normalized;
 
-        float forceMagnitude = charge * Mathf.Sqrt(Vector3.SqrMagnitude(velocityVector)) * Mathf.Sqrt(Vector3.SqrMagnitude(magneticFieldVector));
-
-        Debug.Log(forceMagnitude);
-
-        Debug.DrawLine(transform.position, transform.position - forceDirection, Color.red);
+        float forceMagnitude = charge * velocityVector.magnitude * magneticFieldVector.magnitude;
 
         return forceDirection * forceMagnitude;
     }

@@ -11,10 +11,10 @@ public class Electron : MonoBehaviour
 {
     [SerializeField] Vector3 velocityVector = Vector3.zero;
 
-    [SerializeField, Range(-90, 90)] float angle;
-    [SerializeField] float velocity;
-    [SerializeField] float charge;
-    [SerializeField] float magneticFieldStrength = 10;
+    [SerializeField, Range(-90, 90)] public float angle;
+    [SerializeField] public float velocity;
+    [SerializeField] public float charge;
+    [SerializeField] public float magneticFieldStrength = 10;
 
     [SerializeField] ElectronMoveState currentElectronMoveState;
 
@@ -49,15 +49,15 @@ public class Electron : MonoBehaviour
 
         if (currentElectronMoveState == ElectronMoveState.MOVING)
         {
-            electronBody.AddForce(GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector), ForceMode.Force);
+            electronBody.AddForce(GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector * magneticFieldStrength), ForceMode.Force);
         }
 
         prevPosition = transform.position;
     }
 
-    private Vector3 GetForce(float charge, Vector3 velocityVector, Vector3 magneticFieldVector)
+    private Vector3 GetForce(float charge, Vector3 velocity, Vector3 magneticFieldVector)
     {
-        Vector3 forceDirection = Vector3.Cross(velocityVector, magneticFieldVector).normalized;
+        Vector3 forceDirection = Vector3.Cross(velocity, magneticFieldVector).normalized;
 
         float forceMagnitude = charge * velocityVector.magnitude * magneticFieldVector.magnitude;
 

@@ -8,8 +8,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image playPauseIcon;
     [SerializeField] Button restartButton;
     [SerializeField] Slider angleSlider;
-    [SerializeField] Dropdown velocityDropDown;
-    [SerializeField] Dropdown magneticFieldDropDown;
+    [SerializeField] TMP_Dropdown velocityDropDown;
+    [SerializeField] TMP_Dropdown magneticFieldDropDown;
 
     [SerializeField] Sprite playSprite, pauseSprite;
 

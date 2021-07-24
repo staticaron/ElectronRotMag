@@ -1,5 +1,20 @@
 {
   "dependencies": {
+    "com.unity.2d.common": {
+      "version": "file:C:/Users/DevGa_me/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.2d.common@4.0.3",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.2d.sprite": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0"
+      }
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.cinemachine": {
       "version": "2.6.5",
       "depth": 0,

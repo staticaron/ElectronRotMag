@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public enum ElectronMoveState
 {
-    MOVING,
-    NOT_MOVING,
+    Moving,
+    NotMoving,
 }
 
 [RequireComponent(typeof(Rigidbody))]
@@ -16,7 +17,7 @@ public class Electron : MonoBehaviour
     [SerializeField] public float charge;
     [SerializeField] public float magneticFieldStrength = 10;
 
-    [SerializeField] ElectronMoveState currentElectronMoveState;
+    [SerializeField] ElectronMoveState currentElectronMoveState = ElectronMoveState.NotMoving;
 
     private Rigidbody electronBody;
 
@@ -24,21 +25,39 @@ public class Electron : MonoBehaviour
     private Vector3 directionOfMovement;
     private Vector3 magneticFieldVector = Vector3.right;
 
+    [SerializeField] PlayStateChannelSO playStateChannelSO;
+
     private void Awake()
     {
-        //INIT
         electronBody = GetComponent<Rigidbody>();
         prevPosition = transform.position;
+        currentElectronMoveState = ElectronMoveState.NotMoving;
     }
 
-    private void ToggleSim()
+    private void OnEnable()
     {
-        if (currentElectronMoveState == ElectronMoveState.MOVING) currentElectronMoveState = ElectronMoveState.MOVING;
-        else currentElectronMoveState = ElectronMoveState.NOT_MOVING;
+        playStateChannelSO.ESetState += SetState;
+    }
+
+    private void OnDisable()
+    {
+        playStateChannelSO.ESetState -= SetState;
+    }
+
+    private void SetState(PlayState stateToSet)
+    {
+        if (stateToSet == PlayState.Play) currentElectronMoveState = ElectronMoveState.Moving;
+        if (stateToSet == PlayState.Pause) currentElectronMoveState = ElectronMoveState.NotMoving;
     }
 
     private void FixedUpdate()
     {
+        if (currentElectronMoveState != ElectronMoveState.Moving)
+        {
+            electronBody.velocity = Vector3.zero;
+            return;
+        }
+
         velocityVector = new Vector3(velocity * Mathf.Cos(angle * Mathf.Deg2Rad), velocity * Mathf.Sin(angle * Mathf.Deg2Rad));
 
         directionOfMovement = (transform.position - prevPosition).normalized == Vector3.zero ? velocityVector.normalized : (transform.position - prevPosition).normalized;
@@ -46,11 +65,7 @@ public class Electron : MonoBehaviour
         directionOfMovement = new Vector3(velocityVector.x, directionOfMovement.y, directionOfMovement.z);
 
         electronBody.velocity = velocityVector.magnitude * directionOfMovement;
-
-        if (currentElectronMoveState == ElectronMoveState.MOVING)
-        {
-            electronBody.AddForce(GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector * magneticFieldStrength), ForceMode.Force);
-        }
+        electronBody.AddForce(GetForce(charge, directionOfMovement * velocityVector.magnitude, magneticFieldVector * magneticFieldStrength), ForceMode.Force);
 
         prevPosition = transform.position;
     }

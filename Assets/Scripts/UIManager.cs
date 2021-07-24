@@ -7,13 +7,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button playPauseButton;
     [SerializeField] Image playPauseIcon;
     [SerializeField] Button restartButton;
-    [SerializeField] Slider angleSlider;
-    [SerializeField] TMP_Dropdown velocityDropDown;
-    [SerializeField] TMP_Dropdown magneticFieldDropDown;
 
-    [SerializeField] Sprite playSprite, pauseSprite;
+    [SerializeField, Space] CanvasGroup settingsGroup;
+    [SerializeField] float noInteractionAlpha = 0.5f;
 
-    [SerializeField] PlayStateChannelSO playStateChannelSO;
+    [SerializeField, Space] Sprite playSprite;
+    [SerializeField] Sprite pauseSprite;
+
+    [SerializeField, Space] PlayStateChannelSO playStateChannelSO;
 
     private void Start()
     {
@@ -58,17 +59,15 @@ public class UIManager : MonoBehaviour
 
     private void ToggleSettingsInteraction(PlayState playState)
     {
-        if (playState == PlayState.Pause)
+        if (playState == PlayState.Play)
         {
-            angleSlider.interactable = true;
-            velocityDropDown.interactable = true;
-            magneticFieldDropDown.interactable = true;
+            settingsGroup.interactable = false;
+            settingsGroup.alpha = noInteractionAlpha;
         }
         else
         {
-            angleSlider.interactable = false;
-            velocityDropDown.interactable = false;
-            magneticFieldDropDown.interactable = false;
+            settingsGroup.interactable = true;
+            settingsGroup.alpha = 1;
         }
     }
 }

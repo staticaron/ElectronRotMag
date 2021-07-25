@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class ElectronFollow : MonoBehaviour
 {
@@ -21,9 +22,15 @@ public class ElectronFollow : MonoBehaviour
         float q = electronMovement.charge;
         float angle = electronMovement.angle;
 
-        float r = (m * v) / (q * B * Mathf.Sin(angle * Mathf.Deg2Rad));
-
-        return r;
+        if (q != 0 && B != 0 && angle != 0)
+        {
+            float r = (m * v) / (q * B * Mathf.Sin(angle * Mathf.Deg2Rad));
+            return r;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     //Follow the electron with that radii
@@ -31,7 +38,6 @@ public class ElectronFollow : MonoBehaviour
     {
         Vector3 targetPos = targetElectron.transform.position;
         targetPos = new Vector3(targetPos.x, 0, -radius);
-
         transform.position = targetPos;
     }
 }

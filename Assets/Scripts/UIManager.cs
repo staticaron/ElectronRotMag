@@ -8,22 +8,36 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image playPauseIcon;
     [SerializeField] Button restartButton;
 
+    [SerializeField, Space] TMP_Dropdown velocityDropDown;
+    [SerializeField] TMP_Dropdown magneticFieldDropDown;
+    [SerializeField] Slider angleSlider;
+    [SerializeField] Slider chargeSlider;
+
+    [SerializeField, Space] TMP_Text angleSliderValue;
+    [SerializeField] TMP_Text chargeSliderValue;
+
     [SerializeField, Space] CanvasGroup settingsGroup;
     [SerializeField] float noInteractionAlpha = 0.5f;
 
     [SerializeField, Space] Sprite playSprite;
     [SerializeField] Sprite pauseSprite;
 
-    [SerializeField, Space] PlayStateChannelSO playStateChannelSO;
+    [SerializeField, Space] PlayStateChannelSO playStateChannelSO;          //Controls the playState of the game
+    [SerializeField] ElectronDataChannelSO electronDataChannelSO;           //Stores the electron data for easy editing
 
     private void Start()
     {
         SetPlayPauseButtonUI(PlayPauseManager.currentPlayState);
+        UpdateElectronData();
     }
 
     private void OnEnable()
     {
         playStateChannelSO.ESetState += ToggleSettingsInteraction;
+
+        //For Shitty Sliders :(
+        angleSlider.onValueChanged.AddListener(delegate { UpdateElectronData(); });
+        chargeSlider.onValueChanged.AddListener(delegate { UpdateElectronData(); });
     }
 
     private void OnDisable()
@@ -69,5 +83,21 @@ public class UIManager : MonoBehaviour
             settingsGroup.interactable = true;
             settingsGroup.alpha = 1;
         }
+    }
+
+    public void UpdateElectronData()
+    {
+        //Get the values from the settings input
+        float velocityValue;
+        float magneticFieldValue;
+        float.TryParse(velocityDropDown.options[velocityDropDown.value].text, out velocityValue);
+        float.TryParse(magneticFieldDropDown.options[magneticFieldDropDown.value].text, out magneticFieldValue);
+
+        //Set the slider values
+        angleSliderValue.text = angleSlider.value.ToString();
+        chargeSliderValue.text = chargeSlider.value.ToString();
+
+        //Broadcast the values to the listeners
+        electronDataChannelSO.UpdateValues(angleSlider.value, velocityValue, magneticFieldValue, chargeSlider.value);
     }
 }

@@ -12,7 +12,7 @@ public class Electron : MonoBehaviour
 {
     [SerializeField] Vector3 velocityVector = Vector3.zero;
 
-    [SerializeField, Range(-90, 90)] public float angle;
+    [SerializeField, Range(0, 90)] public float angle;
     [SerializeField] public float velocity;
     [SerializeField] public float charge;
     [SerializeField] public float magneticFieldStrength = 10;
@@ -26,6 +26,7 @@ public class Electron : MonoBehaviour
     private Vector3 magneticFieldVector = Vector3.right;
 
     [SerializeField] PlayStateChannelSO playStateChannelSO;
+    [SerializeField] ElectronDataChannelSO electronDataChannelSO;
 
     private void Awake()
     {
@@ -37,11 +38,23 @@ public class Electron : MonoBehaviour
     private void OnEnable()
     {
         playStateChannelSO.ESetState += SetState;
+        electronDataChannelSO.EValuesUpdated += UpdateValues;
     }
 
     private void OnDisable()
     {
         playStateChannelSO.ESetState -= SetState;
+        electronDataChannelSO.EValuesUpdated -= UpdateValues;
+    }
+
+    private void UpdateValues()
+    {
+        this.angle = electronDataChannelSO.angle;
+        this.magneticFieldStrength = electronDataChannelSO.magneticFieldStrength;
+        this.velocity = electronDataChannelSO.speed;
+        this.charge = electronDataChannelSO.charge;
+
+        Debug.Log("Values were updated");
     }
 
     private void SetState(PlayState stateToSet)

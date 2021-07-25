@@ -15,7 +15,9 @@ public class CameraController : MonoBehaviour
 
     private bool isFingerDown = false;
 
-    private const float mobileLookMultiplier = 150;
+    private int mobileLookMultiplier = 150;
+
+    [SerializeField] SettingsDataSO settingsDataSO;
 
     private void Start()
     {
@@ -24,6 +26,8 @@ public class CameraController : MonoBehaviour
         isMobile = true;
 #endif
         #endregion
+
+        mobileLookMultiplier = settingsDataSO.cameraSensitivity;
 
         mousePos = prevMousePos = Vector3.zero;
         vCam = GetComponent<CinemachineFreeLook>();

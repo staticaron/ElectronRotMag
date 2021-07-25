@@ -10,18 +10,21 @@ public class TransitionManager : MonoBehaviour
     private string sceneToLoad = default;
     private Animator transitionAnim;
 
-    private void Start(){
+    private void Start()
+    {
         transitionAnim = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
         levelLoadChannelSO.ELevelLoad += LoadLevel;
+        levelLoadChannelSO.EQuitGame += Quit;
     }
 
     private void OnDisable()
     {
         levelLoadChannelSO.ELevelLoad -= LoadLevel;
+        levelLoadChannelSO.EQuitGame -= Quit;
     }
 
     private void LoadLevel(string levelToLoadName)
@@ -30,8 +33,15 @@ public class TransitionManager : MonoBehaviour
         transitionAnim.Play(EndTransitionAnimationName);
     }
 
+    private void Quit()
+    {
+        transitionAnim.Play(EndTransitionAnimationName);
+        sceneToLoad = "";
+    }
+
     public void TransitionComplete()
     {
-        SceneManager.LoadScene(sceneToLoad);
+        if(string.IsNullOrEmpty(sceneToLoad))Application.Quit();
+        else SceneManager.LoadScene(sceneToLoad);
     }
 }

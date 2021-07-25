@@ -25,6 +25,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void Quit()
     {
-        Application.Quit();
+        levelLoadChannelSO.Quit();
     }
 }

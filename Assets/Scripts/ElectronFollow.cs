@@ -1,16 +1,14 @@
 using UnityEngine;
-using System;
+using System.Collections.Generic;
 
 public class ElectronFollow : MonoBehaviour
 {
     [SerializeField] GameObject targetElectron;
     [SerializeField] Electron electronMovement;
 
-    private float smallestZ = 0;
-
     private void LateUpdate()
     {
-        float r = GetRadius(electron: electronMovement);
+        float r = GetRadius(electronMovement);
         SetPosition(r);
     }
 

@@ -2,6 +2,7 @@
   "dependencies": {
     "com.unity.2d.common": "file:C:/Users/DevGa_me/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.2d.common@4.0.3",
     "com.unity.cinemachine": "2.6.5",
+    "com.unity.device-simulator": "file:F:/Projects/EVStudios_SampleProject/Library/PackageCache/com.unity.device-simulator@3.0.1-preview",
     "com.unity.ide.vscode": "file:H:/Assets/Standard Assets/com.unity.ide.vscode@1.2.2",
     "com.unity.render-pipelines.universal": "10.4.0",
     "com.unity.textmeshpro": "3.0.6",

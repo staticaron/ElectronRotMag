@@ -4,18 +4,28 @@ using Cinemachine;
 [RequireComponent(typeof(CinemachineFreeLook))]
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] bool isMobile = false;
+
     [SerializeField] CinemachineFreeLook vCam;
 
-    [SerializeField] Vector2 inputDirection;
+    [SerializeField, Space] Vector2 inputDirection;
     private Vector3 mousePos, prevMousePos;
 
     [SerializeField, Space] float lookSpeed;
+
+    private bool isFingerDown = false;
 
     private const float mobileLookMultiplier = 200;
 
     private void Start()
     {
-        mousePos = prevMousePos = Input.mousePosition;
+        #region Get the platform details
+#if UNITY_ANDROID
+        isMobile = true;
+#endif
+        #endregion
+
+        mousePos = prevMousePos = Vector3.zero;
         vCam = GetComponent<CinemachineFreeLook>();
     }
 
@@ -31,9 +41,36 @@ public class CameraController : MonoBehaviour
     //Get the input
     private void SetInputDirection()
     {
-        if (Input.GetMouseButton(0))
+        if (isMobile == false)
         {
-            mousePos = Input.mousePosition;
+            if (Input.GetMouseButton(0))
+            {
+                mousePos = Input.mousePosition;
+            }
+        }
+        else
+        {
+            if (Input.touchCount > 0)
+            {
+                Debug.Log("Touched");
+
+                Touch t = Input.GetTouch(0);
+
+                //Get touch down details
+                if (t.phase == TouchPhase.Began)
+                {
+                    isFingerDown = true;
+                }
+                else if (t.phase == TouchPhase.Ended)
+                {
+                    isFingerDown = false;
+                }
+
+                if (isFingerDown == true)
+                {
+                    mousePos = t.position;
+                }
+            }
         }
         inputDirection = (mousePos - prevMousePos).normalized;
     }

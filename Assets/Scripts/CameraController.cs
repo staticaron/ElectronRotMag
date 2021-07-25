@@ -52,8 +52,6 @@ public class CameraController : MonoBehaviour
         {
             if (Input.touchCount > 0)
             {
-                Debug.Log("Touched");
-
                 Touch t = Input.GetTouch(0);
 
                 //Get touch down details

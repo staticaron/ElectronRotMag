@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -99,5 +100,10 @@ public class UIManager : MonoBehaviour
 
         //Broadcast the values to the listeners
         electronDataChannelSO.UpdateValues(angleSlider.value, velocityValue, magneticFieldValue, chargeSlider.value);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

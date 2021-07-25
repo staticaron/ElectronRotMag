@@ -53,8 +53,6 @@ public class Electron : MonoBehaviour
         this.magneticFieldStrength = electronDataChannelSO.magneticFieldStrength;
         this.velocity = electronDataChannelSO.speed;
         this.charge = electronDataChannelSO.charge;
-
-        Debug.Log("Values were updated");
     }
 
     private void SetState(PlayState stateToSet)

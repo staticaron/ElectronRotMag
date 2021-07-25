@@ -22,6 +22,12 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.device-simulator": {
+      "version": "file:F:/Projects/EVStudios_SampleProject/Library/PackageCache/com.unity.device-simulator@3.0.1-preview",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.ide.vscode": {
       "version": "file:H:/Assets/Standard Assets/com.unity.ide.vscode@1.2.2",
       "depth": 0,

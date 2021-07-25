@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    private const string MainMenuSceneName = "MainMenu";
+
     [SerializeField] Button playPauseButton;
     [SerializeField] Image playPauseIcon;
     [SerializeField] Button restartButton;
@@ -25,6 +27,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField, Space] PlayStateChannelSO playStateChannelSO;          //Controls the playState of the game
     [SerializeField] ElectronDataChannelSO electronDataChannelSO;           //Stores the electron data for easy editing
+    [SerializeField] LevelLoadChannelSO levelLoadChannelSO;
 
     private void Start()
     {
@@ -104,6 +107,10 @@ public class UIManager : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        levelLoadChannelSO.LoadLevel(SceneManager.GetActiveScene().name);
+    }
+
+    public void MainMenu(){
+        levelLoadChannelSO.LoadLevel(MainMenuSceneName);
     }
 }

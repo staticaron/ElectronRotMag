@@ -6,6 +6,8 @@ public class ElectronFollow : MonoBehaviour
     [SerializeField] GameObject targetElectron;
     [SerializeField] Electron electronMovement;
 
+    private float smallestZ = 0;
+
     private void LateUpdate()
     {
         float r = GetRadius(electron: electronMovement);
@@ -40,4 +42,7 @@ public class ElectronFollow : MonoBehaviour
         targetPos = new Vector3(targetPos.x, 0, -radius);
         transform.position = targetPos;
     }
+
+    //Get the smallest value of z. 
+    //Add the radius to the z ang get the value of z.
 }

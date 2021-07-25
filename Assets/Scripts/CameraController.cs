@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     private bool isFingerDown = false;
 
-    private const float mobileLookMultiplier = 200;
+    private const float mobileLookMultiplier = 150;
 
     private void Start()
     {

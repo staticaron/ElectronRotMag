@@ -4,6 +4,9 @@ using Cinemachine;
 [RequireComponent(typeof(CinemachineFreeLook))]
 public class CameraController : MonoBehaviour
 {
+    private const string SensitivityPrefsName = "Sensitivity";
+    private const int defaultSensitivity = 150;
+
     [SerializeField] bool isMobile = false;
 
     [SerializeField] CinemachineFreeLook vCam;
@@ -17,8 +20,6 @@ public class CameraController : MonoBehaviour
 
     private int mobileLookMultiplier = 150;
 
-    [SerializeField] SettingsDataSO settingsDataSO;
-
     private void Start()
     {
         #region Get the platform details
@@ -27,7 +28,7 @@ public class CameraController : MonoBehaviour
 #endif
         #endregion
 
-        mobileLookMultiplier = settingsDataSO.cameraSensitivity;
+        LoadSavedData();
 
         mousePos = prevMousePos = Vector3.zero;
         vCam = GetComponent<CinemachineFreeLook>();
@@ -40,6 +41,20 @@ public class CameraController : MonoBehaviour
         SetCamera();
 
         prevMousePos = mousePos;
+    }
+
+    private void LoadSavedData()
+    {
+        int sensitivity = PlayerPrefs.GetInt(SensitivityPrefsName);
+
+        //In case sensitivity is not set, initialise it with the default value
+        if(sensitivity == 0)
+        {
+            sensitivity = defaultSensitivity;
+            PlayerPrefs.SetInt(SensitivityPrefsName, defaultSensitivity);
+        }
+
+        mobileLookMultiplier = sensitivity == 0 ? defaultSensitivity : sensitivity;
     }
 
     //Get the input
